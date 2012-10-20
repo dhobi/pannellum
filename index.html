@@ -7,34 +7,29 @@
         <script type="text/javascript" src="js/Three.js"></script>
 		<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
         <script type="text/javascript" src="js/pannellum.js"></script>
+        <script>
+            function onLoad() {
+            var p = new Pannellum({
+                            id:'panoramaOne',
+                            autoload: "yes",
+                            showFullToggle : false,
+                            showZoom : false,
+                            rotation: {
+                                direction : "right",
+                                speed: 0.10
+                            }});
+            var p2 = new Pannellum({
+                            id:'panoramaTwo',
+                            autoload: "no",
+                            author: "Geilio Master",
+                            license : 3
+                        });
+            }
+        </script>
 	</head>
 	
-	<body class="noselect">
-        <script>
-            var p = new Pannellum({
-                width:435,
-                height:330,
-                panorama:"titanic360/1_10.jpg",
-                autoload: "yes", 
-                showFullToggle : false, 
-                showZoom : false,
-                rotation: {
-                    direction : "right",
-                    speed: 0.10
-                }});
-        </script>
-		<br/>
-        <br/>
-        <script>
-            var p = new Pannellum({
-                width:650,
-                height:500,
-                panorama:"titanic360/1_4.jpg",
-                autoload: "no",
-                title : "Titanic staircase",
-                author: "Geilio Master",
-                license : 3
-            });
-        </script>
+	<body class="noselect" onload="onLoad()">
+        <img src="titanic360/1_10.jpg" id="panoramaOne" width="435" height="330" />
+        <img src="titanic360/1_4.jpg" id="panoramaTwo" width="600" height="500" title="Titanic staircase"/>
 	</body>
 </html>

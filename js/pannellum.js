@@ -28,8 +28,12 @@ function Pannellum(args) {
     var _self = this;
 
     args = defaultFor(args, {});
-    var pWidth = defaultFor(args.width, 450);
-    var pHeight = defaultFor(args.height, 300);
+
+
+    var pWidth;
+    var pHeight;
+    var srcFromElem;
+    var titleFromElem;
     var catchKeyInputs = true;
     var gid;
 
@@ -78,23 +82,184 @@ function Pannellum(args) {
 
     var generateZoomHtml = function () {
         if (mustShowZoom()) {
-            return '<div id="pannellum_zoomcontrols_' + gid + '" class="pannellum_zoomcontrols"><div id="pannellum_zoom_in_' + gid + '" class="pannellum_zoom_in pannellum_sprite"></div><div id="pannellum_zoom_out_' + gid + '" class="pannellum_zoom_out pannellum_sprite"></div></div>';
+            var zoomControlsElem = document.createElement('div');
+            zoomControlsElem.setAttribute('id', 'pannellum_zoomcontrols_' + gid);
+            zoomControlsElem.setAttribute('class', 'pannellum_zoomcontrols');
+
+            var zoomControlsIn = document.createElement('div');
+            zoomControlsIn.setAttribute('id', 'pannellum_zoom_in_' + gid);
+            zoomControlsIn.setAttribute('class', 'pannellum_zoom_in pannellum_sprite');
+
+            var zoomControlsOut = document.createElement('div');
+            zoomControlsOut.setAttribute('id', 'pannellum_zoom_out_' + gid);
+            zoomControlsOut.setAttribute('class', 'pannellum_zoom_out pannellum_sprite');
+
+            zoomControlsElem.appendChild(zoomControlsIn);
+            zoomControlsElem.appendChild(zoomControlsOut);
+
+
+            return zoomControlsElem;
         }
-        return '';
+        return document.createTextNode('');
     }
 
     var generateFullToggleHtml = function () {
         if (mustShowFullToggle()) {
-            return '<div id="pannellum_fullwindowtoggle_button_' + gid + '" class="pannellum_fullwindowtoggle_button pannellum_sprite pannellum_fullwindowtoggle_button_inactive"></div>';
+            var fullWindowToggleButton = document.createElement('div');
+            fullWindowToggleButton.setAttribute('id', 'pannellum_fullwindowtoggle_button_' + gid);
+            fullWindowToggleButton.setAttribute('class', 'pannellum_fullwindowtoggle_button pannellum_sprite pannellum_fullwindowtoggle_button_inactive');
+
+            return fullWindowToggleButton;
         }
-        return '';
+        return document.createTextNode('');
+    }
+
+    var checkInitElem = function () {
+
+        if (document.getElementById(args.id) == null) {
+            alert("Given id " + args.id + " is not valid!");
+            return false;
+        }
+
+        try {
+            pWidth = defaultFor(args.width, document.getElementById(args.id).width);
+        } catch (event) {
+            pWidth = args.width;
+        }
+        try {
+            pHeight = defaultFor(args.height, document.getElementById(args.id).height);
+        } catch (event) {
+            pHeight = args.height;
+        }
+
+        try {
+            srcFromElem = defaultFor(args.panorama, document.getElementById(args.id).src);
+        } catch (event) {
+            srcFromElem = args.panorama;
+        }
+
+        try {
+            titleFromElem = defaultFor(args.title, document.getElementById(args.id).title);
+        } catch (event) {
+            titleFromElem = defaultFor(args.title,'');
+        }
+        return true;
     }
 
     this.newInit = function () {
 
+        if (!checkInitElem()) {
+            return;
+        }
         generateDivId();
 
-        document.write('<div id="pannellum_page_' + gid + '" class="pannellum_page"><div id="pannellum_container_' + gid + '" class="pannellum_container"></div><noscript><div id="pannellum_nojavascript_' + gid + '" class="pannellum_noselect pannellum_nojavascript"><p>Javascript is required to view this panorama.<br>(It could be worse; you could need a plugin.)</p></div></noscript><div id="pannellum_panorama_info_' + gid + '" class="pannellum_noselect pannellum_panorama_info"><div id="pannellum_title_box_' + gid + '" class="pannellum_title_box"></div><div id="pannellum_author_box_' + gid + '" class="pannellum_author_box"></div></div>' + generateZoomHtml() + '<div id="pannellum_logo_' + gid + '" class="pannellum_logo pannellum_sprite"><a href="https://bitbucket.org/mpetroff/pannellum/" target="_blank"></a></div>' + generateFullToggleHtml() + '<div id="pannellum_load_box_' + gid + '" class="pannellum_load_box pannellum_noselect"><p>Loading...<div id="pannellum_load_indicator_' + gid + '" class="pannellum_load_indicator"></div></div><div id="pannellum_load_button_' + gid + '" class="pannellum_load_button noselect"><p>Click to<br>Load<br>Panorama<p></div><div id="pannellum_nocanvas_' + gid + '" class="pannellum_nocanvas pannellum_noselect"><p>Your browser does not have the necessary WebGL support to display this panorama.</p></div><span id="pannellum_about_' + gid + '" style="display: none;" class="pannellum_about"><a href="https://bitbucket.org/mpetroff/pannellum/" target="_blank">Pannellum</a></span></div>');
+        var pannellumPageElem = document.createElement("div");
+        pannellumPageElem.setAttribute('id', 'pannellum_page_' + gid);
+        pannellumPageElem.setAttribute('class', 'pannellum_page');
+
+
+        //////
+        var pannellumContainerElem = document.createElement("div");
+        pannellumContainerElem.setAttribute('id', 'pannellum_container_' + gid);
+        pannellumContainerElem.setAttribute('class', 'pannellum_container');
+
+        /////
+        var pannellumNoScriptElem = document.createElement("noscript");
+        var pannellumNoScriptDiv = document.createElement("div");
+        pannellumNoScriptDiv.setAttribute('id', 'pannellum_nojavascript_' + gid);
+        pannellumNoScriptDiv.setAttribute('class', 'pannellum_noselect pannellum_nojavascript');
+        var pannellumNoScriptP = document.createElement("p");
+        var pannellumNoScriptPText = document.createTextNode('Javascript is required to view this panorama.');
+
+        pannellumNoScriptP.appendChild(pannellumNoScriptPText);
+        pannellumNoScriptDiv.appendChild(pannellumNoScriptP);
+        pannellumNoScriptElem.appendChild(pannellumNoScriptDiv);
+
+        /////
+        var pannellumPanoramaInfoDiv = document.createElement("div");
+        pannellumPanoramaInfoDiv.setAttribute('id', 'pannellum_panorama_info_' + gid);
+        pannellumPanoramaInfoDiv.setAttribute('class', 'pannellum_noselect pannellum_panorama_info');
+        var panoramaTitleDiv = document.createElement("div");
+        panoramaTitleDiv.setAttribute('id', 'pannellum_title_box_' + gid);
+        panoramaTitleDiv.setAttribute('class', 'pannellum_title_box');
+        var panoramaAuthorDiv = document.createElement("div");
+        panoramaAuthorDiv.setAttribute('id', 'pannellum_author_box_' + gid);
+        panoramaAuthorDiv.setAttribute('class', 'pannellum_author_box');
+
+        pannellumPanoramaInfoDiv.appendChild(panoramaTitleDiv);
+        pannellumPanoramaInfoDiv.appendChild(panoramaAuthorDiv);
+
+        ///////
+        var pannellumLogoElem = document.createElement("div");
+        pannellumLogoElem.setAttribute('id', 'pannellum_logo_' + gid);
+        pannellumLogoElem.setAttribute('class', 'pannellum_logo pannellum_sprite');
+
+        var pannellumLogoLink = document.createElement("a");
+        pannellumLogoElem.setAttribute('href', 'https://bitbucket.org/mpetroff/pannellum/');
+        pannellumLogoElem.setAttribute('target', '_blank');
+        pannellumLogoElem.appendChild(document.createTextNode(''));
+
+        pannellumLogoElem.appendChild(pannellumLogoLink);
+
+        ///////
+        var pannellumLoadBox = document.createElement("div");
+        pannellumLoadBox.setAttribute('id', 'pannellum_load_box_' + gid);
+        pannellumLoadBox.setAttribute('class', 'pannellum_load_box pannellum_noselect');
+        var pannellumLoadBoxP = document.createElement("p");
+        pannellumLoadBoxP.appendChild(document.createTextNode('Loading...'));
+        var pannellumLoadIndicator = document.createElement("div");
+        pannellumLoadIndicator.setAttribute('id', 'pannellum_load_indicator_' + gid);
+        pannellumLoadIndicator.setAttribute('class', 'pannellum_load_indicator');
+
+        pannellumLoadBox.appendChild(pannellumLoadBoxP);
+        pannellumLoadBox.appendChild(pannellumLoadIndicator);
+
+        ///////
+        var pannellumLoadButton = document.createElement("div");
+        pannellumLoadButton.setAttribute('id', 'pannellum_load_button_' + gid);
+        pannellumLoadButton.setAttribute('class', 'pannellum_load_button noselect');
+        var pannellumLoadButtonP = document.createElement("p");
+        pannellumLoadButtonP.appendChild(document.createTextNode('Click to load panorama'));
+
+        pannellumLoadButton.appendChild(pannellumLoadButtonP);
+
+        ///////
+        var pannellumCanvas = document.createElement("div");
+        pannellumCanvas.setAttribute('id', 'pannellum_nocanvas_' + gid);
+        pannellumCanvas.setAttribute('class', 'pannellum_nocanvas pannellum_noselect');
+        var pannellumCanvasP = document.createElement("p");
+        pannellumCanvasP.appendChild(document.createTextNode('Your browser does not have the necessary WebGL support to display this panorama.'));
+
+        pannellumCanvas.appendChild(pannellumCanvasP);
+
+        //////
+
+        var pannellumAbout = document.createElement("div");
+        pannellumAbout.setAttribute('id', 'pannellum_about_' + gid);
+        pannellumAbout.setAttribute('class', 'pannellum_about');
+        pannellumAbout.setAttribute('style', 'display: none;');
+        var pannellumAboutA = document.createElement("a");
+        pannellumAboutA.setAttribute('href', 'https://bitbucket.org/mpetroff/pannellum/');
+        pannellumAboutA.setAttribute('target', '_blank');
+        pannellumAboutA.appendChild(document.createTextNode('Pannellum'));
+
+        pannellumAbout.appendChild(pannellumAboutA);
+
+        /////
+        pannellumPageElem.appendChild(pannellumContainerElem);
+        pannellumPageElem.appendChild(pannellumNoScriptElem);
+        pannellumPageElem.appendChild(pannellumPanoramaInfoDiv);
+        pannellumPageElem.appendChild(generateZoomHtml());
+        pannellumPageElem.appendChild(pannellumLogoElem);
+        pannellumPageElem.appendChild(generateFullToggleHtml());
+        pannellumPageElem.appendChild(pannellumLoadBox);
+        pannellumPageElem.appendChild(pannellumLoadButton);
+        pannellumPageElem.appendChild(pannellumCanvas);
+        pannellumPageElem.appendChild(pannellumAbout);
+
+
+        var oldNode = document.getElementById(args.id);
+        oldNode.parentNode.replaceChild(pannellumPageElem, oldNode);
 
         if (mustShowZoom()) {
             document.getElementById('pannellum_zoom_in_' + gid).onclick = function () {
@@ -148,8 +313,8 @@ function Pannellum(args) {
     }
 
     var initTitle = function () {
-        if (defaultFor(args.title, '') != '') {
-            document.getElementById('pannellum_title_box_' + gid).innerHTML = args.title
+        if (defaultFor(titleFromElem,'') != '') {
+            document.getElementById('pannellum_title_box_' + gid).innerHTML = titleFromElem;
         }
     }
 
@@ -280,36 +445,36 @@ function Pannellum(args) {
 
             container.appendChild(renderer.domElement);
 
-            var newDocument = document.getElementById('pannellum_page_' + gid);
+            var newPannellumPage = document.getElementById('pannellum_page_' + gid);
 
-            newDocument.onmouseover = function () {
+            newPannellumPage.onmouseover = function () {
                 catchKeyInputs = true;
             }
 
-            newDocument.onmouseout = function () {
+            newPannellumPage.onmouseout = function () {
                 catchKeyInputs = false;
             }
 
-            newDocument.addEventListener('mousedown', onDocumentMouseDown, false);
-            newDocument.addEventListener('mousemove', onDocumentMouseMove, false);
-            newDocument.addEventListener('mouseup', onDocumentMouseUp, false);
-            newDocument.addEventListener('mousewheel', onDocumentMouseWheel, false);
-            newDocument.addEventListener('DOMMouseScroll', onDocumentMouseWheel, false);
-            newDocument.addEventListener('onresize', onDocumentResize, false);
-            newDocument.addEventListener('mozfullscreenchange', onFullScreenChange, false);
-            newDocument.addEventListener('webkitfullscreenchange', onFullScreenChange, false);
-            newDocument.addEventListener('fullscreenchange', onFullScreenChange, false);
-            newDocument.addEventListener('mozfullscreenerror', fullScreenError, false);
-            newDocument.addEventListener('webkitfullscreenerror', fullScreenError, false);
-            newDocument.addEventListener('fullscreenerror', fullScreenError, false);
+            newPannellumPage.addEventListener('mousedown', onDocumentMouseDown, false);
+            newPannellumPage.addEventListener('mousemove', onDocumentMouseMove, false);
+            newPannellumPage.addEventListener('mouseup', onDocumentMouseUp, false);
+            newPannellumPage.addEventListener('mousewheel', onDocumentMouseWheel, false);
+            newPannellumPage.addEventListener('DOMMouseScroll', onDocumentMouseWheel, false);
+            newPannellumPage.addEventListener('onresize', onDocumentResize, false);
+            newPannellumPage.addEventListener('mozfullscreenchange', onFullScreenChange, false);
+            newPannellumPage.addEventListener('webkitfullscreenchange', onFullScreenChange, false);
+            newPannellumPage.addEventListener('fullscreenchange', onFullScreenChange, false);
+            newPannellumPage.addEventListener('mozfullscreenerror', fullScreenError, false);
+            newPannellumPage.addEventListener('webkitfullscreenerror', fullScreenError, false);
+            newPannellumPage.addEventListener('fullscreenerror', fullScreenError, false);
             window.addEventListener('resize', onDocumentResize, false);
             document.addEventListener('keydown', onDocumentKeyPress, false);
             document.addEventListener('keyup', onDocumentKeyUp, false);
             window.addEventListener('blur', clearKeys, false);
-            newDocument.addEventListener('mouseout', onDocumentMouseUp, false);
-            newDocument.addEventListener('touchstart', onDocumentTouchStart, false);
-            newDocument.addEventListener('touchmove', onDocumentTouchMove, false);
-            newDocument.addEventListener('touchend', onDocumentTouchEnd, false);
+            newPannellumPage.addEventListener('mouseout', onDocumentMouseUp, false);
+            newPannellumPage.addEventListener('touchstart', onDocumentTouchStart, false);
+            newPannellumPage.addEventListener('touchmove', onDocumentTouchMove, false);
+            newPannellumPage.addEventListener('touchend', onDocumentTouchEnd, false);
 
             renderInit();
             var t = setTimeout(function () {
@@ -320,7 +485,8 @@ function Pannellum(args) {
                 keyRepeat();
             }, 20);
         };
-        panoimage.src = args.panorama;
+
+        panoimage.src = srcFromElem;
 
         document.getElementById('pannellum_page_' + gid).className = 'pannellum_page pannellum_grab';
 
