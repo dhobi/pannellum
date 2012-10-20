@@ -5,6 +5,7 @@ Pannellum is a lightweight, free, and open source panorama viewer for the web. T
 using iframes.
 
 For more information about usage and compatibility, please visit https://bitbucket.org/mpetroff/pannellum/
+
 All credits goes to mpetroff.
 
 Usage
