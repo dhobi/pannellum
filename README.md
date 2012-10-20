@@ -42,6 +42,6 @@ View index.html for examples.
 
 Changes
 -------
-* Read properties from img - Tag where possible
+* Read properties from img - tag where possible
 * Added roation feature
 * Refactored pannellum to read properties from object instead uf url
