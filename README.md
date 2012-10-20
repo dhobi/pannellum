@@ -12,7 +12,8 @@ Usage
 
 View index.html for examples.
 
-`<html>
+<pre lang='xml'><?xml version="1.0" encoding="utf-8" ?>
+<html>
 <head>
 ...
 <script>
@@ -37,7 +38,8 @@ new Pannellum({
 <img src="1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
 ...
 </body>
-</html>`
+</html>
+</pre>
 
 Changes
 -------
