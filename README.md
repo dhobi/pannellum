@@ -12,7 +12,7 @@ Usage
 
 View index.html for examples.
 
-<pre lang='xml'><?xml version="1.0" encoding="utf-8" ?>
+<pre lang='html'>
 <html>
 <head>
 ...
