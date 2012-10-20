@@ -12,32 +12,32 @@ Usage
 
 View index.html for examples.
 
-<html>
-<head>
-<!-- ... -->
-<script>
-new Pannellum({
-    id:'panoramaOne',
-    autoload:"yes",
-    showFullToggle:true,
-    showZoom:true,
-    rotation:{
-    direction:"right",
-        speed:0.10
-    },
-    author:"Clément d’Esparbès",
-    license:3
-});
-</script>
-<!-- ... -->
-</head>
+    <html>
+    <head>
+    <!-- ... -->
+    <script>
+    new Pannellum({
+        id:'panoramaOne',
+        autoload:"yes",
+        showFullToggle:true,
+        showZoom:true,
+        rotation:{
+        direction:"right",
+            speed:0.10
+        },
+        author:"Clément d’Esparbès",
+        license:3
+    });
+    </script>
+    <!-- ... -->
+    </head>
 
-<body>
-<!-- ... -->
-<img src="1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
-<!-- ... -->
-</body>
-</html>
+    <body>
+    <!-- ... -->
+    <img src="1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
+    <!-- ... -->
+    </body>
+    </html>
 
 Changes
 -------
