@@ -417,8 +417,6 @@ function Pannellum(args) {
         scene = new THREE.Scene();
 
         panoimage = new Image();
-        panoimage.width = 4000;
-        panoimage.height = 2000;
         panotexture = new THREE.Texture(panoimage);
         panoimage.onload = function () {
             panotexture.needsUpdate = true;
