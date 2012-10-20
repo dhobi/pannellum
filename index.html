@@ -1,35 +1,48 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>pannellum</title>
-		<meta charset="utf-8">
-		<link type="text/css" rel="Stylesheet" href="css/pannellum.css" />
-        <script type="text/javascript" src="js/Three.js"></script>
-		<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
-        <script type="text/javascript" src="js/pannellum.js"></script>
-        <script>
-            function onLoad() {
-            var p = new Pannellum({
-                            id:'panoramaOne',
-                            autoload: "yes",
-                            showFullToggle : false,
-                            showZoom : false,
-                            rotation: {
-                                direction : "right",
-                                speed: 0.10
-                            }});
-            var p2 = new Pannellum({
-                            id:'panoramaTwo',
-                            autoload: "no",
-                            author: "Geilio Master",
-                            license : 3
-                        });
-            }
-        </script>
-	</head>
-	
-	<body class="noselect" onload="onLoad()">
-        <img src="titanic360/1_10.jpg" id="panoramaOne" width="435" height="330" />
-        <img src="titanic360/1_4.jpg" id="panoramaTwo" width="600" height="500" title="Titanic staircase"/>
-	</body>
+<head>
+    <title>pannellum</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="Stylesheet" href="css/pannellum.css"/>
+    <script type="text/javascript" src="js/Three.js"></script>
+    <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+    <script type="text/javascript" src="js/pannellum.js"></script>
+    <script>
+        function onLoad() {
+            new Pannellum({
+                id:'panoramaOne',
+                autoload:"yes",
+                showFullToggle:false,
+                showZoom:false,
+                rotation:{
+                    direction:"right",
+                    speed:0.10
+                },
+                author:"Clément d’Esparbès"
+            });
+            new Pannellum({
+                id:'panoramaTwo',
+                autoload:"no",
+                author:"Clément d’Esparbès",
+                license:3
+            });
+
+            new Pannellum({
+                id:'panoramaThree',
+                autoload:"yes",
+                author:"Clément d’Esparbès",
+                rotation:{
+                    direction:"left",
+                    speed:0.50
+                }
+            });
+        }
+    </script>
+</head>
+
+<body class="noselect" onload="onLoad()">
+<img src="titanic360/1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
+<img src="titanic360/1_4.jpg" id="panoramaTwo" width="600" height="500" title="Grand staircase"/>
+<img src="titanic360/1_16.jpg" id="panoramaThree" width="435" height="330" title="Reception room"/>
+</body>
 </html>
