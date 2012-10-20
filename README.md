@@ -9,7 +9,10 @@ All credits goes to mpetroff.
 
 Usage
 -----
-<html>
+
+View index.html for examples.
+
+`<html>
 <head>
 ...
 <script>
@@ -34,7 +37,7 @@ new Pannellum({
 <img src="1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
 ...
 </body>
-</html>
+</html>`
 
 Changes
 -------
