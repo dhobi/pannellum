@@ -12,10 +12,9 @@ Usage
 
 View index.html for examples.
 
-<pre lang='html'>
 <html>
 <head>
-...
+<!-- ... -->
 <script>
 new Pannellum({
     id:'panoramaOne',
@@ -30,16 +29,15 @@ new Pannellum({
     license:3
 });
 </script>
-...
+<!-- ... -->
 </head>
 
 <body>
-...
+<!-- ... -->
 <img src="1_10.jpg" id="panoramaOne" width="435" height="330" title="Reception room"/>
-...
+<!-- ... -->
 </body>
 </html>
-</pre>
 
 Changes
 -------
