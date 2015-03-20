@@ -301,7 +301,8 @@ function Pannellum(args) {
     var initContextmenu = function () {
         try {
             document.getElementById('pannellum_page_' + gid).addEventListener('contextmenu', onRightClick, false);
-        } catch (event) {
+        } catch (err) {
+            console.log(err)
             // Lack of "about" display is not a big deal
         }
     }
@@ -400,9 +401,7 @@ function Pannellum(args) {
                 // show loading box
                 document.getElementById('pannellum_load_box_' + gid).style.display = 'inline';
             }
-            // initialize
             init();
-            animate();
         } else {
             document.getElementById('pannellum_load_button_' + gid).style.display = 'table';
         }
@@ -412,32 +411,37 @@ function Pannellum(args) {
     var init = function () {
         container = document.getElementById('pannellum_container_' + gid);
 
-        camera = new THREE.Camera(fov, pWidth / pHeight, 1, 1100);
+        camera = new THREE.PerspectiveCamera(fov, pWidth / pHeight, 1, 1100);
+        camera.rotation.order = "YXZ";
 
         scene = new THREE.Scene();
+        scene.add(camera);
 
         panoimage = new Image();
         panotexture = new THREE.Texture(panoimage);
         panoimage.onload = function () {
             panotexture.needsUpdate = true;
+            panotexture.minFilter = THREE.NearestFilter;
             mesh = new THREE.Mesh(
-                new THREE.Sphere(500, 60, 40),
+                new THREE.SphereGeometry(500, 60, 40),
                 new THREE.MeshBasicMaterial({map:panotexture})
             );
             mesh.scale.x = -1;
             try {
-                scene.addObject(mesh);
-            } catch (event) {
+                scene.add(mesh);
+            } catch (err) {
                 // show error message if canvas is not supported
+                console.log(err)
                 anError();
             }
 
             try {
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize(pWidth, pHeight);
-                renderer.initWebGLObjects(scene);
-            } catch (event) {
+                //renderer.initWebGLObjects(scene);
+            } catch (err) {
                 // show error message if WebGL is not supported
+                console.log(err)
                 anError();
             }
 
@@ -612,7 +616,11 @@ function Pannellum(args) {
         } else if (fov > 105) {
             fov = 105;
         }
-        camera.projectionMatrix = THREE.Matrix4.makePerspective(fov, pWidth / pHeight, 1, 1100);
+        camera.fov = fov;
+        camera.aspect = pWidth / pHeight;
+        camera.near = 1;
+        camera.far = 1100;
+        camera.updateProjectionMatrix ();
         render();
     }
 
@@ -795,13 +803,18 @@ function Pannellum(args) {
         try {
             camera.aspect = pWidth / pHeight;
             renderer.setSize(pWidth, pHeight);
-            camera.projectionMatrix = THREE.Matrix4.makePerspective(fov, pWidth / pHeight, 1, 1100);
+            camera.fov = fov;
+            camera.aspect = pWidth / pHeight;
+            camera.near = 1;
+            camera.far = 1100;
+            camera.updateProjectionMatrix ();
             render();
 
             // Kludge to deal with WebKit regression: https://bugs.webkit.org/show_bug.cgi?id=93525
             onFullScreenChange();
-        } catch (event) {
+        } catch (err) {
             // panorama not loaded
+            console.log(err)
         }
     }
 
@@ -814,35 +827,34 @@ function Pannellum(args) {
 
     var render = function () {
         try {
-            lat = Math.max(-85, Math.min(85, lat));
-            phi = (90 - lat) * Math.PI / 180;
-            theta = lon * Math.PI / 180;
 
-            camera.target.position.x = 500 * Math.sin(phi) * Math.cos(theta);
-            camera.target.position.y = 500 * Math.cos(phi);
-            camera.target.position.z = 500 * Math.sin(phi) * Math.sin(theta);
+            camera.rotation.x = lat * Math.PI / 180;
+            camera.rotation.y = -lon * Math.PI / 180;
+            camera.rotation.z = 0;
 
             renderer.render(scene, camera);
-        } catch (event) {
+        } catch (err) {
             // panorama not loaded
+            console.log(err)
         }
     }
 
     var renderInit = function () {
         try {
-            render();
+            
             if (!isTimedOut) {
                 requestAnimationFrame(renderInit);
             } else {
                 // hide loading display
                 document.getElementById('pannellum_load_box_' + gid).style.display = 'none';
                 loaded = true;
+                render();
             }
-        } catch (event) {
+        } catch (err) {
             // panorama not loaded
-
+            console.log(err)
             // display error if there is a bad texture
-            if (event == "bad texture") {
+            if (err == "bad texture") {
                 anError();
             }
         }
@@ -867,7 +879,7 @@ function Pannellum(args) {
                     } else {
                         page.webkitRequestFullScreen();
                     }
-                } catch (event) {
+                } catch (err) {
                     fullScreenError();
                 }
             } else {
@@ -911,8 +923,9 @@ function Pannellum(args) {
             try {
                 camera.aspect = pWidth / pHeight;
                 windowlocation += '&popoutautoload=yes';
-            } catch (event) {
+            } catch (err) {
                 // panorama not loaded
+                console.log(err)
             }
             window.open(windowlocation, null, windowspecs)
         } else {
@@ -923,7 +936,11 @@ function Pannellum(args) {
     this.zoomIn = function (amount) {
         if (fov >= 40) {
             fov -= amount;
-            camera.projectionMatrix = THREE.Matrix4.makePerspective(fov, pWidth / pHeight, 1, 1100);
+            camera.fov = fov;
+            camera.aspect = pWidth / pHeight;
+            camera.near = 1;
+            camera.far = 1100;
+            camera.updateProjectionMatrix ();
             render();
         }
         // keep field of view within bounds
@@ -937,7 +954,11 @@ function Pannellum(args) {
     this.zoomOut = function (amount) {
         if (fov <= 100) {
             fov += amount;
-            camera.projectionMatrix = THREE.Matrix4.makePerspective(fov, pWidth / pHeight, 1, 1100);
+            camera.fov = fov;
+            camera.aspect = pWidth / pHeight;
+            camera.near = 1;
+            camera.far = 1100;
+            camera.updateProjectionMatrix ();
             render();
         }
         // keep field of view within bounds
@@ -952,9 +973,7 @@ function Pannellum(args) {
         document.getElementById('pannellum_load_button_' + gid).style.display = 'none';
         document.getElementById('pannellum_load_box_' + gid).style.display = 'inline';
         init();
-        animate();
     }
 
-    //do it
     this.newInit();
 }
